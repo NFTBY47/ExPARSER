@@ -1,0 +1,322 @@
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    display: flex;
+    width: 800px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.history-panel {
+    width: 250px;
+    padding: 20px;
+    background-color: #eee;
+    border-right: 1px solid #ddd;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.history-panel h2 {
+    margin-top: 0;
+    transition: color 0.3s;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.2s;
+}
+
+#history-list li:hover {
+    transform: translateX(5px);
+}
+
+#clear-history-btn {
+    background-color: #e44d26;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#clear-history-btn:hover {
+    background-color: #d1401e;
+    transform: scale(1.05);
+}
+
+.calculator {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.calculator header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.time-display {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000; /* Черный цвет времени */
+    transition: color 0.3s;
+}
+
+.settings {
+    display: flex;
+    gap: 10px;
+}
+
+.display {
+    margin-bottom: 20px;
+}
+
+#expression {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.result {
+    font-size: 24px;
+    margin-top: 10px;
+    transition: color 0.3s;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.buttons button {
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.3s, transform 0.2s;
+}
+
+.buttons button:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+
+#calculate {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#calculate:hover {
+    background-color: #367C39;
+}
+
+#clear {
+    background-color: #f44336;
+    color: white;
+}
+
+#clear:hover {
+    background-color: #da190b;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+.dark-mode .container {
+    background-color: #444;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .history-panel {
+    background-color: #555;
+    border-right: 1px solid #666;
+    color: #f0f0f0;
+}
+
+.dark-mode .history-panel h2 {
+    color: #f0f0f0;
+}
+
+.dark-mode #history-list li {
+    border-bottom: 1px solid #666;
+}
+
+.dark-mode #expression {
+    background-color: #555;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+
+.dark-mode .buttons button {
+    background-color: #555;
+    color: #f0f0f0;
+}
+
+.dark-mode .buttons button:hover {
+    background-color: #666;
+}
+
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .history-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .calculator {
+        padding: 10px;
+    }
+
+    .buttons {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .buttons button {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .display {
+        margin-bottom: 10px;
+    }
+
+    #expression {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    .result {
+        font-size: 20px;
+    }
+
+    body {
+        min-height: auto;
+    }
+
+    .settings {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .settings button, .settings select {
+        margin-bottom: 5px;
+    }
+
+    #history-list li {
+        padding: 6px 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .buttons button {
+        font-size: 14px;
+    }
+}
+
+/* Добавляем стили для кнопки возведения в степень */
+.buttons button[data-value="^"] {
+    background-color: #ff9800;
+    color: white;
+}
+
+.buttons button[data-value="^"]:hover {
+    background-color: #e68900;
+}
+
+/* Стили для кнопки Telegram */
+.telegram-button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#telegram-btn {
+    background-color: #0088cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#telegram-btn:hover {
+    background-color: #0077b3;
+    transform: scale(1.05);
+}
+
+#telegram-btn i {
+    margin-right: 8px;
+}
+
+#matrix-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Чтобы фон был позади основного контента */
+    overflow: hidden;
+    background-color: black;
+}
+
+.matrix-digit {
+    position: absolute;
+    color: #00ff00; /* Зеленый цвет, как в фильме */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    user-select: none; /* Чтобы цифры нельзя было выделить */
+    opacity: 0.8;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(100vh);
+    }
+}

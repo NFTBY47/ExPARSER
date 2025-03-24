@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Parser</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="history-panel">
+            <h2 id="history-title">History</h2>
+            <ul id="history-list">
+                <!-- History items will be added here -->
+            </ul>
+            <button id="clear-history-btn"><i class="fas fa-trash"></i> <span id="clear-history-text">Clear History</span></button>
+        </aside>
+
+        <main class="calculator">
+            <header>
+                <div class="time-display" id="time">12:00</div>
+                <div class="settings">
+                    <button id="theme-toggle"><i class="fas fa-moon"></i> <span id="theme-text">Dark Mode</span></button>
+                    <select id="language-select">
+                        <option value="en">English</option>
+                        <option value="ru">Русский</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="display">
+                <input type="text" id="expression" placeholder="Enter expression">
+                <div class="result" id="result"></div>
+            </div>
+
+            <div class="buttons">
+                <button data-value="7">7</button>
+                <button data-value="8">8</button>
+                <button data-value="9">9</button>
+                <button data-value="/"><i class="fas fa-divide"></i></button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+                <button data-value="*"><i class="fas fa-times"></i></button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="-"><i class="fas fa-minus"></i></button>
+                <button data-value="0">0</button>
+                <button data-value=".">.</button>
+                <button id="calculate"><i class="fas fa-equals"></i></button>
+                <button data-value="+"><i class="fas fa-plus"></i></button>
+                <button data-value="^">^</button>
+                <button id="clear"><i class="fas fa-undo"></i></button>
+            </div>
+
+            <!-- Кнопка для перехода в Telegram-бот -->
+            <div class="telegram-button">
+                <a href="https://t.me/your_bot_link" target="_blank">
+                    <button id="telegram-btn"><i class="fab fa-telegram"></i> Telegram Bot</button>
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <script src="index.js"></script>
+</body>
+</html>
