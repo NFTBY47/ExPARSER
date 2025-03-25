@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder: "Enter expression",
             emptyExpression: "Please enter an expression",
             calculationError: "Calculation error",
-            networkError: "Network error"
+            networkError: "Network error",
+            proxyError: "Proxy service unavailable"
         },
         ru: {
             historyTitle: "История",
@@ -28,9 +29,18 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder: "Введите выражение",
             emptyExpression: "Пожалуйста, введите выражение",
             calculationError: "Ошибка вычисления",
-            networkError: "Ошибка сети"
+            networkError: "Ошибка сети",
+            proxyError: "Прокси-сервис недоступен"
         }
     };
+
+    // Список доступных прокси-серверов
+    const PROXY_SERVERS = [
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.allorigins.win/raw?url=',
+        'https://thingproxy.freeboard.io/fetch/'
+    ];
+    let currentProxyIndex = 0;
 
     let history = [];
     let isDarkMode = false;
@@ -86,6 +96,25 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHistoryList();
     }
 
+    async function tryWithProxy(apiUrl, options, retryCount = 0) {
+        try {
+            const proxyUrl = PROXY_SERVERS[currentProxyIndex % PROXY_SERVERS.length];
+            const response = await fetch(proxyUrl + apiUrl, options);
+            
+            if (!response.ok) {
+                throw new Error(translations[currentLanguage].networkError);
+            }
+            
+            return response;
+        } catch (error) {
+            if (retryCount < PROXY_SERVERS.length - 1) {
+                currentProxyIndex++;
+                return tryWithProxy(apiUrl, options, retryCount + 1);
+            }
+            throw new Error(translations[currentLanguage].proxyError);
+        }
+    }
+
     async function calculate() {
         try {
             const expression = expressionInput.value.trim();
@@ -94,20 +123,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const response = await fetch("http://176.119.156.32:8080/api/v1/calculate", {
+            const apiUrl = 'http://176.119.156.32:8080/api/v1/calculate';
+            const options = {
                 method: "POST",
-                mode: 'cors',
-                body: JSON.stringify({ expression }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ expression })
+            };
 
-            if (!response.ok) {
-                throw new Error(translations[currentLanguage].networkError);
-            }
-
+            const response = await tryWithProxy(apiUrl, options);
             const result = await response.json();
             
             if (result.error) {
