@@ -15,14 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
             clearHistory: "Clear History",
             darkMode: "Dark Mode",
             lightMode: "Light Mode",
-            placeholder: "Enter expression"
+            placeholder: "Enter expression",
+            emptyExpression: "Please enter an expression",
+            calculationError: "Calculation error",
+            networkError: "Network error"
         },
         ru: {
             historyTitle: "История",
             clearHistory: "Очистить историю",
             darkMode: "Темный режим",
             lightMode: "Светлый режим",
-            placeholder: "Введите выражение"
+            placeholder: "Введите выражение",
+            emptyExpression: "Пожалуйста, введите выражение",
+            calculationError: "Ошибка вычисления",
+            networkError: "Ошибка сети"
         }
     };
 
@@ -41,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleTheme() {
         isDarkMode = !isDarkMode;
         body.classList.toggle('dark-mode', isDarkMode);
-        themeToggle.innerHTML = isDarkMode ? `<i class="fas fa-sun"></i> <span id="theme-text">${translations[currentLanguage].lightMode}</span>` : `<i class="fas fa-moon"></i> <span id="theme-text">${translations[currentLanguage].darkMode}</span>`;
+        themeToggle.innerHTML = isDarkMode 
+            ? `<i class="fas fa-sun"></i> <span id="theme-text">${translations[currentLanguage].lightMode}</span>` 
+            : `<i class="fas fa-moon"></i> <span id="theme-text">${translations[currentLanguage].darkMode}</span>`;
     }
 
     function changeLanguage(lang) {
@@ -67,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const [expression] = entry.split('=').map(item => item.trim());
                 expressionInput.value = expression;
                 resultDisplay.textContent = '';
-                expressionInput.focus(); // Фокусируемся на поле ввода
+                expressionInput.focus();
             });
             historyList.appendChild(listItem);
         });
@@ -80,39 +88,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function calculate() {
         try {
-            const expression = expressionInput.value;
+            const expression = expressionInput.value.trim();
             if (!expression) {
-                console.error('Expression is empty');
+                resultDisplay.textContent = translations[currentLanguage].emptyExpression;
                 return;
             }
-//          
-            console.log(expression)
+
             const response = await fetch("http://176.119.156.32:8080/api/v1/calculate", {
                 method: "POST",
+                mode: 'cors',
                 body: JSON.stringify({ expression }),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 }
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(translations[currentLanguage].networkError);
             }
 
             const result = await response.json();
-            console.log(result)
+            
+            if (result.error) {
+                throw new Error(result.error);
+            }
+
             resultDisplay.textContent = result.result;
             isResultDisplayed = true;
-
-            if (typeof addHistoryEntry === 'function') {
-                addHistoryEntry(expression, result.result);
-            }
+            addHistoryEntry(expression, result.result);
+            
         } catch (error) {
             console.error('Error:', error);
-            resultDisplay.textContent = 'Error';
+            resultDisplay.textContent = error.message || translations[currentLanguage].calculationError;
         }
     }
 
+    // Event listeners
     themeToggle.addEventListener('click', toggleTheme);
     languageSelect.addEventListener('change', (e) => changeLanguage(e.target.value));
     clearHistoryBtn.addEventListener('click', clearHistory);
@@ -145,9 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Initialize
     setInterval(updateTime, 1000);
     updateTime();
     updateHistoryList();
     changeLanguage(currentLanguage);
 });
-
